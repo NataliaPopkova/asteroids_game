@@ -24,9 +24,9 @@ private:
 };
 
 enum COLOR {
-    BLUE = (255, 51, 51),
-    RED = (51, 51, 255),
-    GREEN = (0, 255, 0),
+    BLUE =  0x0000ff,
+    RED =   0xff0000,
+    GREEN = 0x00ff00,
 };
 
 struct line {

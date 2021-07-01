@@ -38,7 +38,7 @@ void draw()
   memset(buffer, 0, SCREEN_HEIGHT * SCREEN_WIDTH * sizeof(uint32_t));
 
   line red_line(SCREEN_WIDTH/2 - 10, SCREEN_HEIGHT/2 - 10, SCREEN_WIDTH/2 + 10, SCREEN_HEIGHT/2 + 10);
-  red_line.draw(COLOR::GREEN);
+  red_line.draw(COLOR::RED);
 
 }
 
