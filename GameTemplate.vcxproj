@@ -144,7 +144,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
-    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameObjects.h" />
+    <ClInclude Include="GraphicPrimitives.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp" />

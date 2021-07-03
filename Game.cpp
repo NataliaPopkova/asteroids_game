@@ -1,5 +1,5 @@
 #include "Engine.h"
-#include "GameObject.h"
+#include "GraphicPrimitives.h"
 #include <stdlib.h>
 #include <memory.h>
 
@@ -37,9 +37,9 @@ void draw()
   // clear backbuffer
   memset(buffer, 0, SCREEN_HEIGHT * SCREEN_WIDTH * sizeof(uint32_t));
 
-  line red_line(SCREEN_WIDTH/2 - 10, SCREEN_HEIGHT/2 - 10, SCREEN_WIDTH/2 + 10, SCREEN_HEIGHT/2 + 10);
-  red_line.draw(COLOR::RED);
+  drawLine(SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT / 2 - 50, SCREEN_WIDTH / 2 + 50, SCREEN_HEIGHT / 2 + 50, COLOR::RED);
 
+  drawCircle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 50, COLOR::GREEN);
 }
 
 // free game data in this function
