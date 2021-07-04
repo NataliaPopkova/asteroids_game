@@ -1,59 +1,50 @@
 #pragma once
+
 #include <stdio.h>
 #include <math.h>
-
-class Object {
-public:
-    Object(int x, int y, float speed);
-    virtual ~Object();
-    virtual void Draw() = 0;
-    virtual bool Update();
-    
-private:
-    int x;
-    int y;
-    float dx;
-    float dy;
-    double direction;
-    float speed;
-    int live;
-    // COLOR color;
-};
+#include "Engine.h"
 
 enum COLOR {
-    BLUE =  0x0000ff,
-    RED =   0xff0000,
-    GREEN = 0x00ff00,
+    BLUE  = 0x0000ff,
+    RED   = 0xff0000,
+    GREEN = 0x00ff00
+};
+
+struct Point2D
+{
+    Point2D(int x1, int y1) : x{ x1 }, y{ y1 } {};
+    int x;
+    int y;
 };
 
 /*
     Bresenham's line algorithm
 */
-void drawLine(int x1, int y1, int x2, int y2, COLOR color) {
-    const int deltaX = abs(x2 - x1);
-    const int deltaY = abs(y2 - y1);
-    const int signX = x1 < x2 ? 1 : -1;
-    const int signY = y1 < y2 ? 1 : -1;
+inline void drawLine(Point2D start, Point2D end, COLOR color) {
+    const int deltaX = abs(end.x - start.x);
+    const int deltaY = abs(end.y - start.y);
+    const int signX = start.x < end.x ? 1 : -1;
+    const int signY = start.y < end.y ? 1 : -1;
     int error = deltaX - deltaY;
-    buffer[x2][y2] = color;
-    while (x1 != x2 || y1 != y2)
+    buffer[end.x][end.y] = color;
+    while (start.x != end.x || start.y != end.y)
     {
-        buffer[x1][y1] = color;
+        buffer[start.x][start.y] = color;
         int error2 = error * 2;
         if (error2 > -deltaY)
         {
             error -= deltaY;
-            x1 += signX;
+            start.x += signX;
         }
         if (error2 < deltaX)
         {
             error += deltaX;
-            y1 += signY;
+            start.y += signY;
         }
     }
 };
 
-void drawCircle(int x0, int y0, int radius, COLOR color) {
+inline void drawCircle(int x0, int y0, int radius, COLOR color) {
     int x = 0;
     int y = radius;
     int delta = 1 - 2 * radius;
