@@ -1,3 +1,10 @@
+#define _USE_MATH_DEFINES
+
+#include <stdio.h>
+#include <utility>
+#include <vector>
+#include <math.h>
+
 #include "SpaceShip.h"
 
 bool SpaceShip::Update() {
@@ -30,19 +37,19 @@ void SpaceShip::Reset()
     speed_.x = 0;
     speed_.y = 0;
 
-    rotation_ = 0;
+    rotation_ = -90;
 
     // The ship is not exploded
     exploded_ = false;
 };
 
-void SpaceShip::ApplyLeftRotation(uint32_t elapsedTime)
+void SpaceShip::ApplyLeftRotation(float elapsedTime)
 {
 	// Rotates the ship left
 	rotation_ -= elapsedTime * 180;
 }
 
-void SpaceShip::ApplyRightRotation(uint32_t elapsedTime)
+void SpaceShip::ApplyRightRotation(float elapsedTime)
 {
 	// Rotates the ship right
 	rotation_ += elapsedTime * 180;
@@ -52,7 +59,7 @@ bool SpaceShip::IsExploded() {
 	return exploded_;
 };
 
-void SpaceShip::ApplyAcceleration(uint32_t elapsedTime)
+void SpaceShip::ApplyAcceleration(float elapsedTime)
 {
 	// This accellerates the ship forward. We also cap the speed
 	speed_.x += 250 * elapsedTime * sin(rotation_ * M_PI / 180);
@@ -72,5 +79,32 @@ void SpaceShip::ApplyAcceleration(uint32_t elapsedTime)
 	if (speed_.y < -100)
 	{
 		speed_.y = -100;
+	}
+}
+
+void SpaceShip::Move(double elapsedTime)
+{
+	// Ship moves according to its speed, and if it goes outside the screen, we pop up on the other side of the screen
+	position_.x += elapsedTime * speed_.x;
+	if (position_.x < -1)
+	{
+		position_.x = SCREEN_HEIGHT + 1;
+	}
+	if (position_.x > SCREEN_HEIGHT + 1)
+	{
+		position_.x = -1;
+	}
+	position_.y += elapsedTime * speed_.y;
+	if (position_.y < -1)
+	{
+		position_.y = SCREEN_WIDTH + 1;
+	}
+	if (position_.y > SCREEN_WIDTH + 1)
+	{
+		position_.y = -1;
+	}
+	if (this->IsExploded())
+	{
+		explosionTime_ += elapsedTime;
 	}
 }

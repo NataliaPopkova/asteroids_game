@@ -19,62 +19,67 @@
 //  schedule_quit_game() - quit game after act()
 
 
+SpaceShip* ship;
+
+// initialize game data in this function
 void initialize()
 {
+    ship = new SpaceShip();
+
+
 }
 
 // this function is called to update game data,
 // dt - time elapsed since the previous update (in seconds)
 void act(float dt)
 {
-  if (is_key_pressed(VK_ESCAPE))
+    if (is_key_pressed(VK_ESCAPE))
     schedule_quit_game();
+
+    if (is_key_pressed(VK_LEFT))
+    {
+        if (!ship->IsExploded())
+        {
+            ship->ApplyLeftRotation(dt);
+        }
+    }
+
+    if (is_key_pressed(VK_RIGHT))
+    {
+        if (!ship->IsExploded())
+        {
+            ship->ApplyRightRotation(dt);
+        }
+    }
+
+    if (is_key_pressed(VK_UP))
+    {
+        if (!ship->IsExploded())
+        {
+            ship->ApplyAcceleration(dt);
+            ship->Move(dt);
+        }
+    }
+
+    ship->Move(dt);
 }
 
+// fill buffer in this function
+// uint32_t buffer[SCREEN_HEIGHT][SCREEN_WIDTH] - is an array of 32-bit colors (8 bits per R, G, B)
 void draw()
 {
-    boolean running = true;
-    while (running)
-    {
   // clear backbuffer
   memset(buffer, 0, SCREEN_HEIGHT * SCREEN_WIDTH * sizeof(uint32_t));
+  ship->Draw();
 
-  std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-  std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-
-  SpaceShip ship(Point2D(SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2), Point2D(50, 50));
-
-
-
-      uint32_t elapsed_secs = static_cast<uint32_t>(std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1000000.0);
-
-      if (is_key_pressed(VK_LEFT))
-      {
-          if (!ship.IsExploded())
-          {
-              // If we pressed left and the ship is not exploded, we rotate it
-              ship.ApplyLeftRotation(elapsed_secs);
-          }
-      }
-      if (is_key_pressed(VK_RIGHT))
-      {
-          if (!ship.IsExploded())
-          {
-              // If we pressed right and the ship is not exploded, we rotate it
-              ship.ApplyRightRotation(elapsed_secs);
-          }
-      }
-
-      if (is_key_pressed(VK_ESCAPE)) {
-          act(elapsed_secs);
-          running = false;
-      }
-  }
+     
 
 
 }
 
+// free game data in this function
 void finalize()
 {
+    ship->~SpaceShip();
 }
 

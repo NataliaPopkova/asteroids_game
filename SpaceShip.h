@@ -1,26 +1,27 @@
 #pragma once
 
-#include "GameObjects.h"
 #include "GraphicPrimitives.h"
 
 
-class SpaceShip : public Object {
+class SpaceShip {
 public:
-    SpaceShip(Point2D position, Point2D speed) : position_{ position }, speed_{ speed } {
-        Draw();
-    };
+    SpaceShip() = default;
+
+    SpaceShip(Point2D_d position, Point2D_d speed) : position_{ position }, speed_{ speed } {};
 
     ~SpaceShip() = default;
 
-    bool Update() override;
+    bool Update();
 
-    void Draw() override;
+    void Draw();
 
-    void ApplyLeftRotation(uint32_t elapsedTime);
+    void ApplyLeftRotation(float elapsedTime);
 
-    void ApplyRightRotation(uint32_t elapsedTime);
+    void ApplyRightRotation(float elapsedTime);
 
-    void ApplyAcceleration(uint32_t elapsedTime);
+    void ApplyAcceleration(float elapsedTime);
+
+    void Move(double elapsedTime);
 
     void Explode();
 
@@ -31,13 +32,12 @@ public:
 private:
     COLOR color_{ COLOR::BLUE };
 
-    Point2D position_;
-    Point2D speed_;
+    Point2D_d position_{ Point2D_d(SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2) };
+    Point2D_d speed_{ Point2D_d(0, 0) };
 
-    double  rotation_{ -90 };
+    double  rotation_{ 0 };
     int hp_;
 
     bool exploded_{false};
-
-    std::vector<std::pair<int, int>> area;
+    double explosionTime_;
 };

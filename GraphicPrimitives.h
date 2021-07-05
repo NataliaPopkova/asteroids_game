@@ -17,6 +17,13 @@ struct Point2D
     int y;
 };
 
+struct Point2D_d
+{
+    Point2D_d(double x1, double y1) : x{ x1 }, y{ y1 } {};
+    double x;
+    double y;
+};
+
 /*
     Bresenham's line algorithm
 */
