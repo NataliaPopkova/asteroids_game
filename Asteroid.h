@@ -26,13 +26,13 @@ public:
 
 private:
     Point2D_d position_;
-    double    speed_;
+    double    speed_{ ASTEROID_SPEED };
 
-    int    size_;
-    double explosionTime_;
-    double rotation_;
-    double rotationSpeed_;
-    double initial_rotationAngle_;
+    int    size_{4};
+    double explosionTime_{0};
+    double rotation_{0};
+    double rotationSpeed_{0};
+    double initial_rotationAngle_{0};
 
     Point2D_d speed{0, speed_};
 

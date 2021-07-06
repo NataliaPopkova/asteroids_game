@@ -5,6 +5,10 @@
 
 #include "Asteroid.h"
 
+static inline double random(double min, double max)
+{
+    return (double)(rand()) / RAND_MAX * (max - min) + min;
+}
 
 Asteroid::Asteroid() {
     // Initialize position_ randomly on the screen
@@ -25,12 +29,13 @@ Asteroid::Asteroid() {
     // Initializes a random rotation speed_
     rotation_ = 0;
     rotationSpeed_ =
-        rand() % ASTEROID_MAX_ROTATION - (ASTEROID_MAX_ROTATION / 2);
+        rand() % ASTEROID_MAX_ROTATION + (ASTEROID_MAX_ROTATION / 2);
 
     // Generates random shape of the asteroid
     int variation = ASTEROID_SIZE_VARIATION * size_ / 4;
     for (int i = 0; i < ASTEROID_CORNERS; i++) {
-        sizeVariation[i] = rand() % variation - (variation / 2.0);
+        //sizeVariation[i] = rand() % variation + (variation / 2.0);
+        sizeVariation[i] = random(variation / 2, variation);
     }
 }
 
@@ -38,8 +43,8 @@ Asteroid::Asteroid(Point2D_d newPosition, int newSize, double newSpeed)
         : position_(newPosition), speed_(newSpeed), size_(newSize) {
     // Initializes a random rotation speed
     rotation_ = 0;
-    rotationSpeed_ =
-        rand() % ASTEROID_MAX_ROTATION - (ASTEROID_MAX_ROTATION / 2);
+    rotationSpeed_ = random(ASTEROID_MAX_ROTATION / 2, ASTEROID_MAX_ROTATION);
+        // rand() % ASTEROID_MAX_ROTATION - (ASTEROID_MAX_ROTATION / 2);
 
     // Generates random shape of the asteroid
     int variation = ASTEROID_SIZE_VARIATION * size_ / 4;
@@ -88,19 +93,34 @@ void Asteroid::Explode() {
 void Asteroid::Draw() {
     if (size_ > 0) {
         const int       angleStep = 360 / ASTEROID_CORNERS;
-        Point2D_d points[angleStep];
+        Point2D_d points[ASTEROID_CORNERS];
+
+        points[0] = Point2D_d(position_.x, position_.y);
+        Point2D_d bias0(size_ * ASTEROID_SIZE_MULTIPLIER + sizeVariation[0],
+            size_ * ASTEROID_SIZE_MULTIPLIER + sizeVariation[0]);
+
+        rotate(rotation_, points[0]);
+        move(bias0, points[0]);
+
         for (int i = 1; i < ASTEROID_CORNERS; i++) {
-            points[i - 1] = Point2D_d(position_.x, position_.y);
+            points[i] = Point2D_d(position_.x, position_.y);
             Point2D_d bias(size_ * ASTEROID_SIZE_MULTIPLIER + sizeVariation[i],
                            size_ * ASTEROID_SIZE_MULTIPLIER + sizeVariation[i]);
-            move(bias, points[i - 1]);
-            rotate(rotation_ + i * angleStep, points[i - 1]);
+            rotate(rotation_ + i * angleStep, points[i]);
+            move(bias, points[i]);
 
             if (i > 1) {
-                drawLine_d(points[i - 1], points[i], color_);
+               // drawLine_d(points[i - 1], points[i], color_);
             }
 
             if (i == ASTEROID_CORNERS - 1) {
+                points[i] = Point2D_d(position_.x, position_.y);
+                Point2D_d bias(size_ * ASTEROID_SIZE_MULTIPLIER + sizeVariation[i],
+                    size_ * ASTEROID_SIZE_MULTIPLIER + sizeVariation[i]);
+
+                rotate(rotation_ + i * angleStep, points[i]);
+                move(bias, points[i]);
+
                 drawLine_d(points[ASTEROID_CORNERS - 1], points[0], color_);
             }
         }

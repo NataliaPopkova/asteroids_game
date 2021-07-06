@@ -61,6 +61,12 @@ inline void drawLine_d(Point2D_d start, Point2D_d end, COLOR color) {
     drawLine({(int)start.x, (int)start.y}, {(int)end.x, (int)end.y}, color);
 }
 
+inline void drawPolygonal(Point2D_d* points) {
+    for (int i = 0; i < sizeof(*points); i++) {
+        ///
+    }
+}
+
 inline void drawCircle(Point2D center, int radius, COLOR color) {
     int x     = 0;
     int y     = radius;
