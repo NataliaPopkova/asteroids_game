@@ -96,4 +96,4 @@ int Asteroid::GetSize() {
 
 double Asteroid::GetExplosionTime() {
     return explosionTime_;
-}
+}     

@@ -176,7 +176,7 @@ void asteroids_laser_collision_logic(float dt) {
 
 void asteroid_ship_collision_logic(float dt) {
     bool foundCollision{false};
-    if (!ship->IsExploded()) {
+    if ((!ship->IsExploded()) && (!ship->IsResistant())) {
         foundCollision = false;
         // We go through all the steroids
         for (int i = 0; i < asteroids.size(); i++) {
