@@ -4,6 +4,7 @@
 #include "Engine.h"
 #include "Laser.h"
 #include "SpaceShip.h"
+#include "MessageDraw.h"
 #include "windows.h"
 #include <memory.h>
 #include <stdlib.h>
@@ -58,9 +59,6 @@ void laser_logic(float dt) {
 }
 
 void spaceShip_logic(float dt) {
-    if (is_key_pressed(VK_ESCAPE))
-        schedule_quit_game();
-
     if (is_key_pressed(VK_LEFT)) {
         if (!ship->IsExploded()) {
             ship->ApplyLeftRotation(dt);
@@ -111,9 +109,7 @@ void asteroids_logic(float dt) {
         gameOver = true;
         gameWon  = true;
     }
-
-    if (gameOver == true)
-        schedule_quit_game();
+        // schedule_quit_game();
 }
 
 void asteroids_laser_collision_logic(float dt) {
