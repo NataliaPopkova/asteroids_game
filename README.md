@@ -1,2 +1,3 @@
-# asteroids_linux
-asteroids game for linux
+# asteroids game
+Реализация игры Asteroids под windows
+
