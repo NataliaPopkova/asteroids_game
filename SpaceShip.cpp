@@ -1,22 +1,24 @@
 #define _USE_MATH_DEFINES
 
 #include <math.h>
-#include <ctime>
 
 #include "SpaceShip.h"
 
-bool SpaceShip::Update() {
-    // erase area
-    // Draw() callout
+SpaceShip::SpaceShip(int lifeNo) {
+    // "lives" ships, just to display the number of lives
+    // left in the corner of the screen
+    Reset();
 
-    return true;
-};
+    // Sets position in the corner of the screen
+    position_.x = 30 + lifeNo * 30;
+    position_.y = 40;
+}
 
 void SpaceShip::Draw() {
     if (!exploded_) {
-        Point2D_d headPoint{0, 30};
-        Point2D_d leftPoint{-15, -15};
-        Point2D_d rightPoint{15, -15};
+        Point2D_d headPoint{0, size_};
+        Point2D_d leftPoint{-size_ / 2, -size_ / 2};
+        Point2D_d rightPoint{size_ / 2, -size_ / 2};
 
         rotate(rotation_, headPoint);
         rotate(rotation_, leftPoint);
@@ -84,10 +86,14 @@ double SpaceShip::GetExplosionTime() {
 };
 
 void SpaceShip::ApplyAcceleration(float elapsedTime) {
-    speed_ += 0.5;
-    if (speed_ > 3) {
-        speed_ = 3;
+    speed_ += 0.1;
+    if (speed_ > 1) {
+        speed_ = 1;
     }
+}
+
+double SpaceShip::GetSize() {
+    return size_;
 }
 
 void SpaceShip::Move(float elapsedTime) {
@@ -101,18 +107,18 @@ void SpaceShip::Move(float elapsedTime) {
         rotate(rotation_, speed);
 
         position_.x += speed.x;
-        if (position_.x < 30) {
-            position_.x = SCREEN_WIDTH - 30;
+        if (position_.x < size_) {
+            position_.x = SCREEN_WIDTH - size_;
         }
-        if (position_.x > SCREEN_WIDTH - 30) {
-            position_.x = 30;
+        if (position_.x > SCREEN_WIDTH - size_) {
+            position_.x = size_;
         }
         position_.y += speed.y;
-        if (position_.y < 30) {
-            position_.y = SCREEN_HEIGHT - 30;
+        if (position_.y < size_) {
+            position_.y = SCREEN_HEIGHT - size_;
         }
-        if (position_.y > SCREEN_HEIGHT - 30) {
-            position_.y = 30;
+        if (position_.y > SCREEN_HEIGHT - size_) {
+            position_.y = size_;
         }
 
         speed_ -= 0.1;

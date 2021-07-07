@@ -1,2 +1,2 @@
-# asteroids_game
-реализация игры Asteriods на с++
+# asteroids_linux
+asteroids game for linux

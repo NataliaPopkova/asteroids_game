@@ -3,6 +3,7 @@
 #define _USE_MATH_DEFINES
 
 #include <math.h>
+#include <vector>
 #include "Engine.h"
 
 enum COLOR { BLUE = 0x0000ff, RED = 0xff0000, GREEN = 0x00ff00 };
@@ -37,15 +38,21 @@ static void move(const Point2D_d& bias, Point2D_d& point) {
     Bresenham's line algorithm
 */
 inline void drawLine(Point2D start, Point2D end, COLOR color) {
-    const int deltaX     = abs(end.x - start.x);
-    const int deltaY     = abs(end.y - start.y);
-    const int signX      = start.x < end.x ? 1 : -1;
-    const int signY      = start.y < end.y ? 1 : -1;
-    int       error      = deltaX - deltaY;
-    buffer[end.y][end.x] = color;
+    const int deltaX = abs(end.x - start.x);
+    const int deltaY = abs(end.y - start.y);
+    const int signX  = start.x < end.x ? 1 : -1;
+    const int signY  = start.y < end.y ? 1 : -1;
+    int       error  = deltaX - deltaY;
+    if ((end.y > 0) && (end.y < SCREEN_HEIGHT) && (end.x > 0) &&
+        (end.x < SCREEN_WIDTH)) {
+        buffer[end.y][end.x] = color;
+    }
     while (start.x != end.x || start.y != end.y) {
-        buffer[start.y][start.x] = color;
-        int error2               = error * 2;
+        if ((start.y > 0) && (start.y < SCREEN_HEIGHT) && (start.x > 0) &&
+            (start.x < SCREEN_WIDTH)) {
+            buffer[start.y][start.x] = color;
+        }
+        int error2 = error * 2;
         if (error2 > -deltaY) {
             error -= deltaY;
             start.x += signX;
@@ -61,10 +68,36 @@ inline void drawLine_d(Point2D_d start, Point2D_d end, COLOR color) {
     drawLine({(int)start.x, (int)start.y}, {(int)end.x, (int)end.y}, color);
 }
 
-inline void drawPolygonal(Point2D_d* points) {
-    for (int i = 0; i < sizeof(*points); i++) {
-        ///
-    }
+/*
+    draws a regular polygon
+*/
+inline void drawPolygonal_d(Point2D_d center, double size, int anglesNum,
+                          COLOR color) {
+    std::vector<Point2D_d> points;
+    Point2D_d              bias(size, size);
+    double                 angleStep = 360. / anglesNum;
+    Point2D_d              point(center);
+    Point2D_d              _center(-center.x, -center.y);
+
+    move(_center, point);
+    move(bias, point);
+    rotate(0, point);
+    move(center, point);
+
+    points.push_back(point);
+
+    for (int i = 1; i < anglesNum; i++) {
+        Point2D_d point1(center);
+        move(_center, point1);
+        move(bias, point1);
+        rotate(angleStep * i, point1);
+        move(center, point1);
+
+        points.push_back(point1);
+        drawLine_d(points[i - 1], points[i], color);
+    };
+
+    drawLine_d(points[anglesNum - 1], points[0], color);
 }
 
 inline void drawCircle(Point2D center, int radius, COLOR color) {
@@ -73,10 +106,14 @@ inline void drawCircle(Point2D center, int radius, COLOR color) {
     int delta = 1 - 2 * radius;
     int error = 0;
     while (y >= 0) {
-        buffer[center.y + y][center.x + x] = color;
-        buffer[center.y - y][center.x + x] = color;
-        buffer[center.y + y][center.x - x] = color;
-        buffer[center.y - y][center.x - x] = color;
+        if ((center.y + y > radius) &&
+            (center.y + y < SCREEN_HEIGHT - radius) &&
+            (center.x + x > radius) && (center.x + x < SCREEN_WIDTH - radius)) {
+            buffer[center.y + y][center.x + x] = color;
+            buffer[center.y - y][center.x + x] = color;
+            buffer[center.y + y][center.x - x] = color;
+            buffer[center.y - y][center.x - x] = color;
+        }
 
         error = 2 * (delta + y) - 1;
         if (delta < 0 && error <= 0) {

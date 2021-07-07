@@ -6,12 +6,9 @@ class SpaceShip {
 public:
     SpaceShip() = default;
 
-    SpaceShip(Point2D_d position, Point2D_d speed)
-            : position_{position}, speed_{0} {};
+    SpaceShip(int lifeNo);
 
     ~SpaceShip() = default;
-
-    bool Update();
 
     void Draw();
 
@@ -33,6 +30,8 @@ public:
 
     double GetRotation();
 
+    double GetSize();
+
     void Reset();
 
 private:
@@ -41,7 +40,7 @@ private:
     Point2D_d position_{Point2D_d(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)};
     double    speed_{0};
     double    rotation_{180};
-    int       hp_;
+    double    size_{30};
 
     bool   exploded_{false};
     double explosionTime_;
