@@ -3,8 +3,6 @@
 
 // initialize game data in this function
 void initialize() {
-    //std::srand(std::time(nullptr));
-
     ship = new SpaceShip();
 
     asteroids.reserve(100);
@@ -43,6 +41,8 @@ void draw() {
     memset(buffer, 0, SCREEN_HEIGHT * SCREEN_WIDTH * sizeof(uint32_t));
 
     if (!gameOver) {
+        drawScore(score, Point2D_d(876,10));
+
         ship->Draw();
 
         for (int i = 0; i < lasers.size(); i++) {
@@ -59,9 +59,11 @@ void draw() {
     } else {
         if (gameWon == true) {
             drawWin();
+            drawScore(score, Point2D_d(438, 514));
         }
         else {
             drawLose();
+            drawScore(score, Point2D_d(438, 514));
         }
     }
 }

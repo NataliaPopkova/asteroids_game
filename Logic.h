@@ -19,10 +19,13 @@ std::vector<Laser>     lasers;
 std::vector<Asteroid>  asteroids;
 std::vector<SpaceShip> lifeShips;
 
+int  asteroids_n{ 6 };
+
 bool gameOver{false};
 bool gameWon{false};
+
 int  lives{3};
-int  asteroids_n{6};
+int score{0};
 
 void laser_logic(float dt);
 void spaceShip_logic(float dt);
@@ -129,15 +132,13 @@ void asteroids_laser_collision_logic(float dt) {
                 // Size of the asteroid
                 double size = asteroids[i].GetSize();
 
-                if (distance < size) {  // We have a collision
+                if (distance < size) {
                     // Remove laser
                     lasers.erase(lasers.begin() + j);
 
                     // Explode asteroid and create 2 new if needed
                     if (asteroids[i].GetSize() > ASTEROID_MIN_SIZE) {
-                        // If the asteroid's size is higher than 1, we can split
-                        // it into 2 That means creating 2 smaller asteroids and
-                        // removing this one
+                        // Split asteroid
                         Point2D_d cSpeed =
                             Point2D_d(0, asteroids[i].GetSpeed());
                         double speed1(asteroids[i].GetSpeed());
@@ -161,6 +162,7 @@ void asteroids_laser_collision_logic(float dt) {
                         // If atseroid size was ASTEROID_MIN_SIZE, we set it to
                         // explosion mode
                         asteroids[i].Explode();
+                        score++;
                     }
 
                     foundCollision = true;
